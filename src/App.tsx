@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import Layout from "antd/es/layout";
+import { Route, Switch, Redirect } from "react-router";
+import { Currencies, Converter } from "./pages";
+import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
+import { IStore, thunkDispatch } from "./store";
+import { currenciesActions } from "./store/actions";
 
-function App() {
+type IProps = {
+  selectedCurrency: string;
+}
+
+const App: React.FC<IProps> = (props) => {
+  
+  useEffect(() => {
+    thunkDispatch(currenciesActions.fetchCurrency());
+  }, [props.selectedCurrency])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Layout style={{ height: "100vh" }}>
+      <Layout.Header
+        style={{
+          backgroundColor: "#fff",
+          display: "flex",
+          justifyContent: "space-around",
+          padding: "15px",
+        }}
+      >
+        <span />
+        <NavLink
+          exact
+          to="/currencies"
+          className="ant-btn"
+          activeClassName="ant-btn-dangerous"
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Currencies
+        </NavLink>
+        <NavLink
+          exact
+          to="/converter"
+          className="ant-btn"
+          activeClassName="ant-btn-dangerous"
+        >
+          Converter
+        </NavLink>
+        <span />
+      </Layout.Header>
+      <Layout.Content style={{ padding: "35px" }}>
+        <Switch>
+          <Route exact path="/currencies" component={Currencies} />
+          <Route exact path="/converter" component={Converter} />
+          <Redirect exact from="/" to="/currencies" />
+          <Route path="*" render={() => <div>Not found!</div>} />
+        </Switch>
+      </Layout.Content>
+    </Layout>
   );
 }
 
-export default App;
+export default connect((state: IStore) => ({selectedCurrency: state.user.selectedCurrency}))(App);

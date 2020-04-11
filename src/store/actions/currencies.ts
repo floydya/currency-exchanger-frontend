@@ -4,6 +4,7 @@ import {
   ICurrenciesState,
   CurrenciesActions,
   IApiResponse,
+  ConverterActionsNames,
 } from "../types/currencies";
 import { ThunkAction } from "redux-thunk";
 import store from "..";
@@ -36,6 +37,22 @@ const actions = {
       (error) => dispatch(actions.setError(error))
     );
   },
+  setFromCurrency: (currency: string): CurrenciesActions => ({
+    type: ConverterActionsNames.SET_FROM_CURRENCY,
+    payload: currency,
+  }),
+  setToCurrency: (currency: string): CurrenciesActions => ({
+    type: ConverterActionsNames.SET_TO_CURRENCY,
+    payload: currency,
+  }),
+  setFromValue: (value: number): CurrenciesActions => ({
+    type: ConverterActionsNames.SET_FROM_VALUE,
+    payload: value,
+  }),
+  setToValue: (value: number): CurrenciesActions => ({
+    type: ConverterActionsNames.SET_TO_VALUE,
+    payload: value,
+  }),
 };
 
 export default actions;
